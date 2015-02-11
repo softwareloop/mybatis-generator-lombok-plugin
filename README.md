@@ -2,8 +2,8 @@
 
 A plugin for [MyBatis Generator](http://mybatis.github.io/generator/)
 to use [Lombok](http://projectlombok.org/) annotations
-instead of getters and setters. Helps to reduce the amount of boilerplate
-generated code.
+instead of getters and setters. Helps to reduce the amount of
+generated boilerplate code.
 
 Code __before__ applying the Lombok plugin:
 
@@ -94,8 +94,6 @@ Then, in your MyBatis Generator configuration, include the plugin:
             "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
 
     <generatorConfiguration>
-        <classPathEntry location="/Users/predo/.m2/repository/com/h2database/h2/1.4.184/h2-1.4.184.jar" />
-
         <context id="example"
                  targetRuntime="MyBatis3Simple"
                  defaultModelType="flat">
