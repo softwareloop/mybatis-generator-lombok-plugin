@@ -1,6 +1,7 @@
 # MyBatis Generator Lombok plugin
 
-A plugin for MyBatis Generator to use Lombok annotations
+A plugin for [MyBatis Generator](http://mybatis.github.io/generator/)
+to use [Lombok](http://projectlombok.org/) annotations
 instead of getters and setters. Helps to reduce the amount of boilerplate
 generated code.
 
@@ -126,3 +127,6 @@ for mybatis-generator-maven-plugin:
     </plugin>
 
 
+## Author
+
+[Paolo Predonzani](https://github.com/softwareloop)
