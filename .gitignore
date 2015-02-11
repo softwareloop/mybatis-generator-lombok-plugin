@@ -1,0 +1,12 @@
+/target
+/.idea
+*.DS_Store
+*.iml
+*.ipr
+*.iws
+*~
+*.bak
+*.orig
+*.log
+*.project
+/.settings/
