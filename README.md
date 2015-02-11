@@ -60,7 +60,7 @@ Code __before__ applying the Lombok plugin:
         }
     }
 
-Code __after__ applying the Lombok plugin (much shorted):
+Code __after__ applying the Lombok plugin (much shorter):
 
     package example.dto;
 
