@@ -1,6 +1,6 @@
 # MyBatis Generator Lombok plugin
 
-A plugin for MyBatis Generator to use Lombok's @Data annotation
+A plugin for MyBatis Generator to use Lombok annotations
 instead of getters and setters. Helps to reduce the amount of boilerplate
 generated code.
 
@@ -60,7 +60,7 @@ Code __before__ applying the Lombok plugin:
         }
     }
 
-Code __after__ applying the Lombok plugin:
+Code __after__ applying the Lombok plugin (much shorted):
 
     package example.dto;
 
