@@ -7,7 +7,8 @@ import org.mybatis.generator.api.dom.java.FullyQualifiedJavaType;
 import org.mybatis.generator.api.dom.java.Method;
 import org.mybatis.generator.api.dom.java.TopLevelClass;
 
-import java.util.List;
+import java.util.*;
+import java.util.Map.Entry;
 
 /**
  * A MyBatis Generator plugin to use Lombok's @Data annoation
@@ -17,20 +18,18 @@ import java.util.List;
  */
 public class LombokPlugin extends PluginAdapter {
 
-    private FullyQualifiedJavaType dataAnnotation;
+    private volatile Collection<Annotations> annotations;
 
     /**
      * LombokPlugin contructor
      */
     public LombokPlugin() {
-        dataAnnotation = new FullyQualifiedJavaType("lombok.Data");
     }
 
     /**
      * @param warnings
      * @return always true
      */
-    @Override
     public boolean validate(List<String> warnings) {
         return true;
     }
@@ -118,13 +117,74 @@ public class LombokPlugin extends PluginAdapter {
     }
 
     /**
-     * Adds the @Data lombok import and annotation to the class
+     * Adds the lombok annotations import and annotation to the class
      *
      * @param topLevelClass
      */
-    protected void addDataAnnotation(TopLevelClass topLevelClass) {
-        topLevelClass.addImportedType(dataAnnotation);
-        topLevelClass.addAnnotation("@Data");
+    private void addDataAnnotation(TopLevelClass topLevelClass) {
+        for (Annotations annotation : annotations) {
+            topLevelClass.addImportedType(annotation.javaType);
+            topLevelClass.addAnnotation(annotation.name);
+        }
     }
 
+    @Override
+    public void setProperties(Properties properties) {
+        super.setProperties(properties);
+
+        annotations = new HashSet<Annotations>(Annotations.values().length);
+        Set<Entry<Object, Object>> entries = properties.entrySet();
+
+        //@Data is default annotation
+        annotations.add(Annotations.DATA);
+
+        for (Entry<Object, Object> entry : entries) {
+            String paramName = entry.getKey().toString();
+            boolean isEnable = Boolean.parseBoolean(entry.getValue().toString());
+            if (isEnable) {
+                Annotations annotation = Annotations.get(paramName);
+                if (annotation != null) {
+                    annotations.add(annotation);
+                    annotations.addAll(Annotations.getDependencies(annotation));
+                }
+            }
+        }
+    }
+
+    private enum Annotations {
+        DATA("data", "@Data", "lombok.Data"),
+        BUILDER("builder", "@Builder", "lombok.Builder"),
+        ALL_ARGS_CONSTRUCTOR("allArgsConstructor", "@AllArgsConstructor", "lombok.AllArgsConstructor"),
+        NO_ARGS_CONSTRUCTOR("noArgsConstructor", "@NoArgsConstructor", "lombok.NoArgsConstructor"),
+        TO_STRING("toString", "@ToString", "lombok.ToString");
+
+
+        private final String paramName;
+        private final String name;
+        private final FullyQualifiedJavaType javaType;
+
+
+        Annotations(String paramName, String name, String className) {
+            this.paramName = paramName;
+            this.name = name;
+            this.javaType = new FullyQualifiedJavaType(className);
+        }
+
+        private static Annotations get(String paramName) {
+            paramName = paramName.trim().toLowerCase();
+
+            for (Annotations annotation : Annotations.values())
+                if (annotation.paramName.toLowerCase().equals(paramName))
+                    return annotation;
+
+            return null;
+        }
+
+        private static Collection<Annotations> getDependencies(Annotations annotation) {
+            if (annotation == ALL_ARGS_CONSTRUCTOR)
+                return Collections.singleton(NO_ARGS_CONSTRUCTOR);
+            else
+                return Collections.emptyList();
+        }
+    }
 }
