@@ -21,7 +21,7 @@ public class LombokPlugin extends PluginAdapter {
     private volatile Collection<Annotations> annotations;
 
     /**
-     * LombokPlugin contructor
+     * LombokPlugin constructor
      */
     public LombokPlugin() {
     }
@@ -117,7 +117,7 @@ public class LombokPlugin extends PluginAdapter {
     }
 
     /**
-     * Adds the lombok annotations import and annotation to the class
+     * Adds the lombok annotations' imports and annotations to the class
      *
      * @param topLevelClass
      */
