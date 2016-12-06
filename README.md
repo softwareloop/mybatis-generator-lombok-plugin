@@ -98,7 +98,11 @@ Then, in your MyBatis Generator configuration, include the plugin:
                  targetRuntime="MyBatis3Simple"
                  defaultModelType="flat">
             <!-- include the plugin -->
-            <plugin type="com.softwareloop.mybatis.generator.plugins.LombokPlugin"/>
+            <plugin type="com.softwareloop.mybatis.generator.plugins.LombokPlugin">
+                 <!-- enable annotations -->
+                 <property name="builder" value="true"/>
+                 <property name="allArgsConstructor" value="false"/>
+            </plugin>
 
             <!-- other configurations -->
 
