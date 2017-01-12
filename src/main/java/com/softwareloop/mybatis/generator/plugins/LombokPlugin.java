@@ -11,19 +11,20 @@ import java.util.*;
 import java.util.Map.Entry;
 
 /**
- * A MyBatis Generator plugin to use Lombok's @Data annoation
- * instead of getters and setters
+ * A MyBatis Generator plugin to use Lombok's annotations.
+ * For example, use @Data annotation instead of getter ands setter.
  *
  * @author Paolo Predonzani (http://softwareloop.com/)
  */
 public class LombokPlugin extends PluginAdapter {
 
-    private volatile Collection<Annotations> annotations;
+    private final Collection<Annotations> annotations;
 
     /**
      * LombokPlugin constructor
      */
     public LombokPlugin() {
+        annotations = new HashSet<Annotations>(Annotations.values().length);
     }
 
     /**
@@ -132,17 +133,15 @@ public class LombokPlugin extends PluginAdapter {
     public void setProperties(Properties properties) {
         super.setProperties(properties);
 
-        annotations = new HashSet<Annotations>(Annotations.values().length);
-        Set<Entry<Object, Object>> entries = properties.entrySet();
-
         //@Data is default annotation
         annotations.add(Annotations.DATA);
 
-        for (Entry<Object, Object> entry : entries) {
-            String paramName = entry.getKey().toString();
+        for (Entry<Object, Object> entry : properties.entrySet()) {
             boolean isEnable = Boolean.parseBoolean(entry.getValue().toString());
+
             if (isEnable) {
-                Annotations annotation = Annotations.get(paramName);
+                String paramName = entry.getKey().toString().trim();
+                Annotations annotation = Annotations.getValueOf(paramName);
                 if (annotation != null) {
                     annotations.add(annotation);
                     annotations.addAll(Annotations.getDependencies(annotation));
@@ -170,11 +169,9 @@ public class LombokPlugin extends PluginAdapter {
             this.javaType = new FullyQualifiedJavaType(className);
         }
 
-        private static Annotations get(String paramName) {
-            paramName = paramName.trim().toLowerCase();
-
+        private static Annotations getValueOf(String paramName) {
             for (Annotations annotation : Annotations.values())
-                if (annotation.paramName.toLowerCase().equals(paramName))
+                if (String.CASE_INSENSITIVE_ORDER.compare(paramName, annotation.paramName) == 0)
                     return annotation;
 
             return null;
