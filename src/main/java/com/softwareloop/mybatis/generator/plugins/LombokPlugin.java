@@ -25,7 +25,7 @@ public class LombokPlugin extends PluginAdapter {
      * LombokPlugin constructor
      */
     public LombokPlugin() {
-        annotations = new HashSet<Annotations>(Annotations.values().length);
+        annotations = new LinkedHashSet<Annotations>(Annotations.values().length);
     }
 
     /**
