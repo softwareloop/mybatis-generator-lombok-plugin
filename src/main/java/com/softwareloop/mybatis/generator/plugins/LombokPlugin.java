@@ -4,6 +4,7 @@ import org.mybatis.generator.api.IntrospectedColumn;
 import org.mybatis.generator.api.IntrospectedTable;
 import org.mybatis.generator.api.PluginAdapter;
 import org.mybatis.generator.api.dom.java.FullyQualifiedJavaType;
+import org.mybatis.generator.api.dom.java.Interface;
 import org.mybatis.generator.api.dom.java.Method;
 import org.mybatis.generator.api.dom.java.TopLevelClass;
 
@@ -24,7 +25,7 @@ public class LombokPlugin extends PluginAdapter {
      * LombokPlugin constructor
      */
     public LombokPlugin() {
-        annotations = new HashSet<Annotations>(Annotations.values().length);
+        annotations = new LinkedHashSet<Annotations>(Annotations.values().length);
     }
 
     /**
@@ -138,7 +139,7 @@ public class LombokPlugin extends PluginAdapter {
 
         for (Entry<Object, Object> entry : properties.entrySet()) {
             boolean isEnable = Boolean.parseBoolean(entry.getValue().toString());
-
+            
             if (isEnable) {
                 String paramName = entry.getKey().toString().trim();
                 Annotations annotation = Annotations.getValueOf(paramName);
@@ -148,6 +149,15 @@ public class LombokPlugin extends PluginAdapter {
                 }
             }
         }
+    }
+
+    @Override
+    public boolean clientGenerated(Interface interfaze,
+                                   TopLevelClass topLevelClass,
+                                   IntrospectedTable introspectedTable) {
+        interfaze.addImportedType(new FullyQualifiedJavaType("org.apache.ibatis.annotations.Mapper"));
+        interfaze.addAnnotation("@Mapper");
+        return true;
     }
 
     private enum Annotations {
