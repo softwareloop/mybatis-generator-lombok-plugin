@@ -136,11 +136,10 @@ public class LombokPlugin extends PluginAdapter {
 
         //@Data is default annotation
         annotations.add(Annotations.DATA);
-        annotations.add(Annotations.NO_ARGS_CONSTRUCTOR);
 
         for (Entry<Object, Object> entry : properties.entrySet()) {
             boolean isEnable = Boolean.parseBoolean(entry.getValue().toString());
-
+            
             if (isEnable) {
                 String paramName = entry.getKey().toString().trim();
                 Annotations annotation = Annotations.getValueOf(paramName);
