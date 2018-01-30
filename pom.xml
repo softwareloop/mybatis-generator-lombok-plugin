@@ -47,11 +47,6 @@
         </contributor>
     </contributors>
 
-    <properties>
-        <sonatypeOssDistMgmtSnapshotsUrl>https://oss.sonatype.org/content/repositories/snapshots/</sonatypeOssDistMgmtSnapshotsUrl>
-        <arguments />
-    </properties>
-
     <dependencies>
         <dependency>
             <groupId>org.mybatis.generator</groupId>
@@ -63,16 +58,15 @@
 
     <distributionManagement>
         <snapshotRepository>
-            <id>sonatype-nexus-snapshots</id>
-            <name>Sonatype Nexus Snapshots</name>
-            <url>${sonatypeOssDistMgmtSnapshotsUrl}</url>
+            <id>ossrh</id>
+            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
         </snapshotRepository>
         <repository>
-            <id>sonatype-nexus-staging</id>
-            <name>Nexus Release Repository</name>
+            <id>ossrh</id>
             <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
         </repository>
     </distributionManagement>
+
 
     <build>
         <plugins>
@@ -82,20 +76,6 @@
                 <version>2.7</version>
                 <configuration>
                     <encoding>UTF-8</encoding>
-                    <nonFilteredFileExtensions>
-                        <nonFilteredFileExtension>ftl</nonFilteredFileExtension>
-                        <nonFilteredFileExtension>acp</nonFilteredFileExtension>
-                        <nonFilteredFileExtension>jpg</nonFilteredFileExtension>
-                        <nonFilteredFileExtension>png</nonFilteredFileExtension>
-                        <nonFilteredFileExtension>gif</nonFilteredFileExtension>
-                        <nonFilteredFileExtension>pdf</nonFilteredFileExtension>
-                        <nonFilteredFileExtension>doc</nonFilteredFileExtension>
-                        <nonFilteredFileExtension>xls</nonFilteredFileExtension>
-                        <nonFilteredFileExtension>ppt</nonFilteredFileExtension>
-                        <nonFilteredFileExtension>bin</nonFilteredFileExtension>
-                        <nonFilteredFileExtension>lic</nonFilteredFileExtension>
-                        <nonFilteredFileExtension>swf</nonFilteredFileExtension>
-                    </nonFilteredFileExtensions>
                 </configuration>
             </plugin>
             <plugin>
