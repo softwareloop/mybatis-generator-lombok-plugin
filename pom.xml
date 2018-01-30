@@ -4,7 +4,7 @@
 
     <groupId>com.softwareloop</groupId>
     <artifactId>mybatis-generator-lombok-plugin</artifactId>
-    <version>1.0</version>
+    <version>1.1-SNAPSHOT</version>
 
     <name>mybatis-generator-lombok-plugin</name>
     <description>A plugin for MyBatis Generator to use Lombok annotations instead of getters and setters</description>
@@ -23,7 +23,7 @@
         <connection>scm:git:git@github.com:softwareloop/mybatis-generator-lombok-plugin.git</connection>
         <developerConnection>scm:git:git@github.com:softwareloop/mybatis-generator-lombok-plugin.git</developerConnection>
         <url>git@github.com:softwareloop/mybatis-generator-lombok-plugin.git</url>
-        <tag>v1.0</tag>
+        <tag>HEAD</tag>
     </scm>
 
     <developers>
