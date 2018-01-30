@@ -68,6 +68,21 @@
     <!-- Build and release documentation:
     http://central.sonatype.org/pages/apache-maven.html
     http://maven.apache.org/maven-release/maven-release-plugin/usage.html
+    http://central.sonatype.org/pages/releasing-the-deployment.html
+
+    To make a release and stage to Maven Central Repo:
+    http://central.sonatype.org/pages/releasing-the-deployment.html
+    https://oss.sonatype.org/
+
+    mvn release:prepare -DdryRun=true
+    Check everything and, if needed: mvn release:clean
+    mvn release:prepare
+    mvn release:perform
+
+    This will:
+    - upgrade the project version, tag and commit
+    - build the project, sources and javadocs
+    - stage and release to the Central Repository in one go
     -->
 
     <build>
@@ -111,17 +126,6 @@
                     <arguments>-Psonatype-oss-release</arguments>
                     <autoVersionSubmodules>true</autoVersionSubmodules>
                     <tagNameFormat>v@{project.version}</tagNameFormat>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.sonatype.plugins</groupId>
-                <artifactId>nexus-staging-maven-plugin</artifactId>
-                <version>1.6.7</version>
-                <extensions>true</extensions>
-                <configuration>
-                    <serverId>ossrh</serverId>
-                    <nexusUrl>https://oss.sonatype.org/</nexusUrl>
-                    <autoReleaseAfterClose>true</autoReleaseAfterClose>
                 </configuration>
             </plugin>
         </plugins>
