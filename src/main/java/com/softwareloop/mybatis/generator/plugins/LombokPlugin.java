@@ -30,6 +30,7 @@ public class LombokPlugin extends PluginAdapter {
 
     /**
      * @param warnings
+     *          list of warnings
      * @return always true
      */
     public boolean validate(List<String> warnings) {
@@ -40,8 +41,11 @@ public class LombokPlugin extends PluginAdapter {
      * Intercepts base record class generation
      *
      * @param topLevelClass
+     *            the generated base record class
      * @param introspectedTable
-     * @return
+     *            The class containing information about the table as
+     *            introspected from the database
+     * @return always true
      */
     @Override
     public boolean modelBaseRecordClassGenerated(TopLevelClass topLevelClass,
@@ -54,8 +58,11 @@ public class LombokPlugin extends PluginAdapter {
      * Intercepts primary key class generation
      *
      * @param topLevelClass
+     *            the generated primary key class
      * @param introspectedTable
-     * @return
+     *            The class containing information about the table as
+     *            introspected from the database
+     * @return always true
      */
     @Override
     public boolean modelPrimaryKeyClassGenerated(TopLevelClass topLevelClass,
@@ -68,8 +75,11 @@ public class LombokPlugin extends PluginAdapter {
      * Intercepts "record with blob" class generation
      *
      * @param topLevelClass
+     *            the generated record with BLOBs class
      * @param introspectedTable
-     * @return
+     *            The class containing information about the table as
+     *            introspected from the database
+     * @return always true
      */
     @Override
     public boolean modelRecordWithBLOBsClassGenerated(
@@ -83,11 +93,18 @@ public class LombokPlugin extends PluginAdapter {
      * See SimpleModelGenerator
      *
      * @param method
+     *            the getter, or accessor, method generated for the specified
+     *            column
      * @param topLevelClass
+     *            the partially implemented model class
      * @param introspectedColumn
+     *            The class containing information about the column related
+     *            to this field as introspected from the database
      * @param introspectedTable
+     *            The class containing information about the table as
+     *            introspected from the database
      * @param modelClassType
-     * @return
+     *            the type of class that the field is generated for
      */
     @Override
     public boolean modelGetterMethodGenerated(Method method,
@@ -103,11 +120,19 @@ public class LombokPlugin extends PluginAdapter {
      * See SimpleModelGenerator
      *
      * @param method
+     *            the setter, or mutator, method generated for the specified
+     *            column
      * @param topLevelClass
+     *            the partially implemented model class
      * @param introspectedColumn
+     *            The class containing information about the column related
+     *            to this field as introspected from the database
      * @param introspectedTable
+     *            The class containing information about the table as
+     *            introspected from the database
      * @param modelClassType
-     * @return
+     *            the type of class that the field is generated for
+     * @return always false
      */
     @Override
     public boolean modelSetterMethodGenerated(Method method,
@@ -122,6 +147,7 @@ public class LombokPlugin extends PluginAdapter {
      * Adds the lombok annotations' imports and annotations to the class
      *
      * @param topLevelClass
+     *            the partially implemented model class
      */
     private void addDataAnnotation(TopLevelClass topLevelClass) {
         for (Annotations annotation : annotations) {
