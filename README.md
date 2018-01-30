@@ -82,9 +82,25 @@ Code __after__ applying the Lombok plugin (much shorter):
 
 ## Using the plugin
 
-First things first, clone this repository locally and run:
+In your Maven pom.xml file, set up the MyBatis Generator plugin, and add
+mybatis-generator-lombok-plugin as a dependency:
 
-    mvn clean install
+    <plugin>
+        <groupId>org.mybatis.generator</groupId>
+        <artifactId>mybatis-generator-maven-plugin</artifactId>
+        <version>${mybatis.generator.version}</version>
+        <configuration>
+            <overwrite>true</overwrite>
+        </configuration>
+        <dependencies>
+            <dependency>
+                <groupId>com.softwareloop</groupId>
+                <artifactId>mybatis-generator-lombok-plugin</artifactId>
+                <version>1.0</version>
+            </dependency>
+        </dependencies>
+    </plugin>
+
 
 Then, in your MyBatis Generator configuration, include the plugin:
 
@@ -109,26 +125,14 @@ Then, in your MyBatis Generator configuration, include the plugin:
         </context>
     </generatorConfiguration>
 
-If you run MyBatis Generator from Maven, you can add the plugin as a dependency
-for mybatis-generator-maven-plugin:
 
-    <plugin>
-        <groupId>org.mybatis.generator</groupId>
-        <artifactId>mybatis-generator-maven-plugin</artifactId>
-        <version>${mybatis.generator.version}</version>
-        <configuration>
-            <overwrite>true</overwrite>
-        </configuration>
-        <dependencies>
-            <dependency>
-                <groupId>com.softwareloop</groupId>
-                <artifactId>mybatis-generator-lombok-plugin</artifactId>
-                <version>1.0-SNAPSHOT</version>
-            </dependency>
-        </dependencies>
-    </plugin>
+## Authors
 
+Maintainer:
 
-## Author
+* [softwareloop](https://github.com/softwareloop)
 
-[Paolo Predonzani](https://github.com/softwareloop)
+Contributors:
+
+* [izebit](https://github.com/izebit)
+* [kimmking](https://github.com/kimmking)
