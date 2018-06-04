@@ -9,7 +9,7 @@ import org.mybatis.generator.api.dom.java.Method;
 import org.mybatis.generator.api.dom.java.TopLevelClass;
 
 import java.util.*;
-import java.util.Map.Entry;
+
 
 /**
  * A MyBatis Generator plugin to use Lombok's annotations.
@@ -152,7 +152,7 @@ public class LombokPlugin extends PluginAdapter {
     private void addDataAnnotation(TopLevelClass topLevelClass) {
         for (Annotations annotation : annotations) {
             topLevelClass.addImportedType(annotation.javaType);
-            topLevelClass.addAnnotation(annotation.name);
+            topLevelClass.addAnnotation(annotation.asAnnotation());
         }
     }
 
@@ -163,18 +163,28 @@ public class LombokPlugin extends PluginAdapter {
         //@Data is default annotation
         annotations.add(Annotations.DATA);
 
-        for (Entry<Object, Object> entry : properties.entrySet()) {
-            boolean isEnable = Boolean.parseBoolean(entry.getValue().toString());
-            
-            if (isEnable) {
+        // Skip annotation option entries that has '.'(like 'accessors.chain').
+        // value="true" is not set also.
+        properties.entrySet().stream()
+            .filter(entry -> !entry.getKey().toString().trim().contains("."))
+            .filter(entry -> Boolean.parseBoolean(entry.getValue().toString()))
+            .forEach(entry -> {
                 String paramName = entry.getKey().toString().trim();
                 Annotations annotation = Annotations.getValueOf(paramName);
                 if (annotation != null) {
+                    // set options if presented
+                    String optionsPrefix = paramName + ".";
+                    properties.stringPropertyNames().stream()
+                        .filter(propName -> propName.startsWith(optionsPrefix))
+                        .forEach(propName ->
+                            annotation.appendOptions(propName, properties.getProperty(propName))
+                        );
                     annotations.add(annotation);
                     annotations.addAll(Annotations.getDependencies(annotation));
                 }
             }
-        }
+        );
+
     }
 
     @Override
@@ -191,18 +201,21 @@ public class LombokPlugin extends PluginAdapter {
         BUILDER("builder", "@Builder", "lombok.Builder"),
         ALL_ARGS_CONSTRUCTOR("allArgsConstructor", "@AllArgsConstructor", "lombok.AllArgsConstructor"),
         NO_ARGS_CONSTRUCTOR("noArgsConstructor", "@NoArgsConstructor", "lombok.NoArgsConstructor"),
+        ACCESSORS("accessors", "@Accessors", "lombok.experimental.Accessors"),
         TO_STRING("toString", "@ToString", "lombok.ToString");
 
 
         private final String paramName;
         private final String name;
         private final FullyQualifiedJavaType javaType;
+        private final List<String> options;
 
 
         Annotations(String paramName, String name, String className) {
             this.paramName = paramName;
             this.name = name;
             this.javaType = new FullyQualifiedJavaType(className);
+            this.options = new ArrayList<>();
         }
 
         private static Annotations getValueOf(String paramName) {
@@ -218,6 +231,27 @@ public class LombokPlugin extends PluginAdapter {
                 return Collections.singleton(NO_ARGS_CONSTRUCTOR);
             else
                 return Collections.emptyList();
+        }
+
+        // A trivial quoting.
+        // Because Lombok annotation options type is almost String or boolean.
+        private static String quote(String value) {
+            if (Boolean.TRUE.toString().equals(value) || Boolean.FALSE.toString().equals(value))
+                // case of boolean, not passed as an array.
+                return value;
+            return value.replaceAll("[\\w]+", "\"$0\"");
+        }
+
+        private void appendOptions(String key, String value) {
+            String keyPart = key.substring(key.indexOf(".") + 1);
+            String valuePart = value.contains(",") ? String.format("{%s}", value) : value;
+            this.options.add(String.format("%s=%s", keyPart, quote(valuePart)));
+        }
+
+        private String asAnnotation() {
+            if (options.size() <= 0)
+                return name;
+            return String.format("%s(%s)", name, String.join(", ", options));
         }
     }
 }
