@@ -29,8 +29,7 @@ public class LombokPlugin extends PluginAdapter {
     }
 
     /**
-     * @param warnings
-     *          list of warnings
+     * @param warnings list of warnings
      * @return always true
      */
     public boolean validate(List<String> warnings) {
@@ -40,51 +39,51 @@ public class LombokPlugin extends PluginAdapter {
     /**
      * Intercepts base record class generation
      *
-     * @param topLevelClass
-     *            the generated base record class
-     * @param introspectedTable
-     *            The class containing information about the table as
-     *            introspected from the database
+     * @param topLevelClass     the generated base record class
+     * @param introspectedTable The class containing information about the table as
+     *                          introspected from the database
      * @return always true
      */
     @Override
-    public boolean modelBaseRecordClassGenerated(TopLevelClass topLevelClass,
-                                                 IntrospectedTable introspectedTable) {
-        addDataAnnotation(topLevelClass);
+    public boolean modelBaseRecordClassGenerated(
+            TopLevelClass topLevelClass,
+            IntrospectedTable introspectedTable
+    ) {
+        addAnnotations(topLevelClass);
         return true;
     }
 
     /**
      * Intercepts primary key class generation
      *
-     * @param topLevelClass
-     *            the generated primary key class
-     * @param introspectedTable
-     *            The class containing information about the table as
-     *            introspected from the database
+     * @param topLevelClass     the generated primary key class
+     * @param introspectedTable The class containing information about the table as
+     *                          introspected from the database
      * @return always true
      */
     @Override
-    public boolean modelPrimaryKeyClassGenerated(TopLevelClass topLevelClass,
-                                                 IntrospectedTable introspectedTable) {
-        addDataAnnotation(topLevelClass);
+    public boolean modelPrimaryKeyClassGenerated(
+            TopLevelClass topLevelClass,
+            IntrospectedTable introspectedTable
+    ) {
+        addAnnotations(topLevelClass);
         return true;
     }
 
     /**
      * Intercepts "record with blob" class generation
      *
-     * @param topLevelClass
-     *            the generated record with BLOBs class
-     * @param introspectedTable
-     *            The class containing information about the table as
-     *            introspected from the database
+     * @param topLevelClass     the generated record with BLOBs class
+     * @param introspectedTable The class containing information about the table as
+     *                          introspected from the database
      * @return always true
      */
     @Override
     public boolean modelRecordWithBLOBsClassGenerated(
-            TopLevelClass topLevelClass, IntrospectedTable introspectedTable) {
-        addDataAnnotation(topLevelClass);
+            TopLevelClass topLevelClass,
+            IntrospectedTable introspectedTable
+    ) {
+        addAnnotations(topLevelClass);
         return true;
     }
 
@@ -92,26 +91,23 @@ public class LombokPlugin extends PluginAdapter {
      * Prevents all getters from being generated.
      * See SimpleModelGenerator
      *
-     * @param method
-     *            the getter, or accessor, method generated for the specified
-     *            column
-     * @param topLevelClass
-     *            the partially implemented model class
-     * @param introspectedColumn
-     *            The class containing information about the column related
-     *            to this field as introspected from the database
-     * @param introspectedTable
-     *            The class containing information about the table as
-     *            introspected from the database
-     * @param modelClassType
-     *            the type of class that the field is generated for
+     * @param method             the getter, or accessor, method generated for the specified
+     *                           column
+     * @param topLevelClass      the partially implemented model class
+     * @param introspectedColumn The class containing information about the column related
+     *                           to this field as introspected from the database
+     * @param introspectedTable  The class containing information about the table as
+     *                           introspected from the database
+     * @param modelClassType     the type of class that the field is generated for
      */
     @Override
-    public boolean modelGetterMethodGenerated(Method method,
-                                              TopLevelClass topLevelClass,
-                                              IntrospectedColumn introspectedColumn,
-                                              IntrospectedTable introspectedTable,
-                                              ModelClassType modelClassType) {
+    public boolean modelGetterMethodGenerated(
+            Method method,
+            TopLevelClass topLevelClass,
+            IntrospectedColumn introspectedColumn,
+            IntrospectedTable introspectedTable,
+            ModelClassType modelClassType
+    ) {
         return false;
     }
 
@@ -119,37 +115,33 @@ public class LombokPlugin extends PluginAdapter {
      * Prevents all setters from being generated
      * See SimpleModelGenerator
      *
-     * @param method
-     *            the setter, or mutator, method generated for the specified
-     *            column
-     * @param topLevelClass
-     *            the partially implemented model class
-     * @param introspectedColumn
-     *            The class containing information about the column related
-     *            to this field as introspected from the database
-     * @param introspectedTable
-     *            The class containing information about the table as
-     *            introspected from the database
-     * @param modelClassType
-     *            the type of class that the field is generated for
+     * @param method             the setter, or mutator, method generated for the specified
+     *                           column
+     * @param topLevelClass      the partially implemented model class
+     * @param introspectedColumn The class containing information about the column related
+     *                           to this field as introspected from the database
+     * @param introspectedTable  The class containing information about the table as
+     *                           introspected from the database
+     * @param modelClassType     the type of class that the field is generated for
      * @return always false
      */
     @Override
-    public boolean modelSetterMethodGenerated(Method method,
-                                              TopLevelClass topLevelClass,
-                                              IntrospectedColumn introspectedColumn,
-                                              IntrospectedTable introspectedTable,
-                                              ModelClassType modelClassType) {
+    public boolean modelSetterMethodGenerated(
+            Method method,
+            TopLevelClass topLevelClass,
+            IntrospectedColumn introspectedColumn,
+            IntrospectedTable introspectedTable,
+            ModelClassType modelClassType
+    ) {
         return false;
     }
 
     /**
      * Adds the lombok annotations' imports and annotations to the class
      *
-     * @param topLevelClass
-     *            the partially implemented model class
+     * @param topLevelClass the partially implemented model class
      */
-    private void addDataAnnotation(TopLevelClass topLevelClass) {
+    private void addAnnotations(TopLevelClass topLevelClass) {
         for (Annotations annotation : annotations) {
             topLevelClass.addImportedType(annotation.javaType);
             topLevelClass.addAnnotation(annotation.asAnnotation());
@@ -163,35 +155,42 @@ public class LombokPlugin extends PluginAdapter {
         //@Data is default annotation
         annotations.add(Annotations.DATA);
 
-        // Skip annotation option entries that has '.'(like 'accessors.chain').
-        // value="true" is not set also.
-        properties.entrySet().stream()
-            .filter(entry -> !entry.getKey().toString().trim().contains("."))
-            .filter(entry -> Boolean.parseBoolean(entry.getValue().toString()))
-            .forEach(entry -> {
-                String paramName = entry.getKey().toString().trim();
-                Annotations annotation = Annotations.getValueOf(paramName);
-                if (annotation != null) {
-                    // set options if presented
-                    String optionsPrefix = paramName + ".";
-                    properties.stringPropertyNames().stream()
-                        .filter(propName -> propName.startsWith(optionsPrefix))
-                        .forEach(propName ->
-                            annotation.appendOptions(propName, properties.getProperty(propName))
-                        );
-                    annotations.add(annotation);
-                    annotations.addAll(Annotations.getDependencies(annotation));
-                }
+        for (String annotationName : properties.stringPropertyNames()) {
+            if (annotationName.contains(".")) {
+                // Not an annotation name
+                continue;
             }
-        );
-
+            String value = properties.getProperty(annotationName);
+            if (!Boolean.parseBoolean(value)) {
+                // The annotation is disabled, skip it
+                continue;
+            }
+            Annotations annotation = Annotations.getValueOf(annotationName);
+            if (annotation == null) {
+                continue;
+            }
+            String optionsPrefix = annotationName + ".";
+            for (String propertyName : properties.stringPropertyNames()) {
+                if (!propertyName.startsWith(optionsPrefix)) {
+                    // A property not related to this annotation
+                    continue;
+                }
+                String propertyValue = properties.getProperty(propertyName);
+                annotation.appendOptions(propertyName, propertyValue);
+                annotations.add(annotation);
+                annotations.addAll(Annotations.getDependencies(annotation));
+            }
+        }
     }
 
     @Override
-    public boolean clientGenerated(Interface interfaze,
-                                   TopLevelClass topLevelClass,
-                                   IntrospectedTable introspectedTable) {
-        interfaze.addImportedType(new FullyQualifiedJavaType("org.apache.ibatis.annotations.Mapper"));
+    public boolean clientGenerated(
+            Interface interfaze,
+            TopLevelClass topLevelClass,
+            IntrospectedTable introspectedTable
+    ) {
+        interfaze.addImportedType(new FullyQualifiedJavaType(
+                "org.apache.ibatis.annotations.Mapper"));
         interfaze.addAnnotation("@Mapper");
         return true;
     }
@@ -215,7 +214,7 @@ public class LombokPlugin extends PluginAdapter {
             this.paramName = paramName;
             this.name = name;
             this.javaType = new FullyQualifiedJavaType(className);
-            this.options = new ArrayList<>();
+            this.options = new ArrayList<String>();
         }
 
         private static Annotations getValueOf(String paramName) {
@@ -249,9 +248,23 @@ public class LombokPlugin extends PluginAdapter {
         }
 
         private String asAnnotation() {
-            if (options.size() <= 0)
+            if (options.isEmpty()) {
                 return name;
-            return String.format("%s(%s)", name, String.join(", ", options));
+            }
+            StringBuilder sb = new StringBuilder();
+            sb.append(name);
+            sb.append("(");
+            boolean first = true;
+            for (String option : options) {
+                if (first) {
+                    first = false;
+                } else {
+                    sb.append(", ");
+                }
+                sb.append(option);
+            }
+            sb.append(")");
+            return sb.toString();
         }
     }
 }
