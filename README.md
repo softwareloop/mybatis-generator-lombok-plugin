@@ -135,6 +135,9 @@ Then, in your MyBatis Generator configuration, include the plugin:
              
              <!-- disable annotations -->
              <property name="allArgsConstructor" value="false"/>
+             
+             <!-- disable @Mapper annotations -->
+             <property name="mapper" value="false"/>
         </plugin>
 
         <!-- other configurations -->
