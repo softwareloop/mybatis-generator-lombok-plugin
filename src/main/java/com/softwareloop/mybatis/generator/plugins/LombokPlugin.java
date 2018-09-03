@@ -21,6 +21,8 @@ public class LombokPlugin extends PluginAdapter {
 
     private final Collection<Annotations> annotations;
 
+    private final String MAPPER = "mapper";
+
     /**
      * LombokPlugin constructor
      */
@@ -189,9 +191,12 @@ public class LombokPlugin extends PluginAdapter {
             TopLevelClass topLevelClass,
             IntrospectedTable introspectedTable
     ) {
-        interfaze.addImportedType(new FullyQualifiedJavaType(
-                "org.apache.ibatis.annotations.Mapper"));
-        interfaze.addAnnotation("@Mapper");
+        String excludeMapper = this.properties.getProperty(MAPPER, "true");
+        if(Boolean.parseBoolean(excludeMapper)) {
+            interfaze.addImportedType(new FullyQualifiedJavaType(
+                    "org.apache.ibatis.annotations.Mapper"));
+            interfaze.addAnnotation("@Mapper");
+        }
         return true;
     }
 
